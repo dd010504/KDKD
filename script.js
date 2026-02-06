@@ -66,7 +66,20 @@ const maze = [
   "###############",
 ];
 
-const tileSize = 32;
+const tilePalette = {
+  wall: "#1e1b4b",
+  floor: "#0f172a",
+  key: "#f472b6",
+  player: "#facc15",
+};
+
+const minimapPalette = {
+  wall: "#312e81",
+  floor: "#1f2937",
+};
+
+const mazeRows = maze.length;
+const mazeCols = maze[0].length;
 let player = { x: 1, y: 1 };
 let hasKey = false;
 let gameActive = false;
@@ -89,6 +102,36 @@ const resetGame = () => {
   draw();
 };
 
+const sizeCanvas = () => {
+  if (!canvas) {
+    return;
+  }
+  const wrapper = canvas.parentElement;
+  if (!wrapper) {
+    return;
+  }
+  const width = wrapper.clientWidth;
+  const height = wrapper.clientHeight;
+  if (width === 0 || height === 0) {
+    return;
+  }
+  canvas.width = width;
+  canvas.height = height;
+  if (minimap) {
+    minimap.width = 140;
+    minimap.height = 140;
+  }
+};
+
+const getTileSize = () => {
+  if (!canvas) {
+    return 32;
+  }
+  return Math.floor(
+    Math.min(canvas.width / mazeCols, canvas.height / mazeRows)
+  );
+};
+
 const draw = () => {
   if (!canvas) {
     return;
@@ -98,25 +141,39 @@ const draw = () => {
     return;
   }
 
-  canvas.width = maze[0].length * tileSize;
-  canvas.height = maze.length * tileSize;
+  sizeCanvas();
   context.clearRect(0, 0, canvas.width, canvas.height);
+  const tileSize = getTileSize();
+  const boardWidth = mazeCols * tileSize;
+  const boardHeight = mazeRows * tileSize;
+  const offsetX = Math.floor((canvas.width - boardWidth) / 2);
+  const offsetY = Math.floor((canvas.height - boardHeight) / 2);
 
   maze.forEach((row, y) => {
     [...row].forEach((cell, x) => {
       if (cell === "#") {
-        context.fillStyle = "#0b1120";
-        context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        context.fillStyle = tilePalette.wall;
+        context.fillRect(
+          offsetX + x * tileSize,
+          offsetY + y * tileSize,
+          tileSize,
+          tileSize
+        );
       } else {
-        context.fillStyle = "#111827";
-        context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        context.fillStyle = tilePalette.floor;
+        context.fillRect(
+          offsetX + x * tileSize,
+          offsetY + y * tileSize,
+          tileSize,
+          tileSize
+        );
       }
       if (cell === "K" && !hasKey) {
-        context.fillStyle = "#38bdf8";
+        context.fillStyle = tilePalette.key;
         context.beginPath();
         context.arc(
-          x * tileSize + tileSize / 2,
-          y * tileSize + tileSize / 2,
+          offsetX + x * tileSize + tileSize / 2,
+          offsetY + y * tileSize + tileSize / 2,
           tileSize / 4,
           0,
           Math.PI * 2
@@ -126,11 +183,11 @@ const draw = () => {
     });
   });
 
-  context.fillStyle = "#fbbf24";
+  context.fillStyle = tilePalette.player;
   context.beginPath();
   context.arc(
-    player.x * tileSize + tileSize / 2,
-    player.y * tileSize + tileSize / 2,
+    offsetX + player.x * tileSize + tileSize / 2,
+    offsetY + player.y * tileSize + tileSize / 2,
     tileSize / 3,
     0,
     Math.PI * 2
@@ -148,14 +205,14 @@ const drawMinimap = () => {
   if (!ctx) {
     return;
   }
-  const scale = minimap.width / maze[0].length;
+  const scale = minimap.width / mazeCols;
   ctx.clearRect(0, 0, minimap.width, minimap.height);
   maze.forEach((row, y) => {
     [...row].forEach((cell, x) => {
-      ctx.fillStyle = cell === "#" ? "#0b1120" : "#1f2937";
+      ctx.fillStyle = cell === "#" ? minimapPalette.wall : minimapPalette.floor;
       ctx.fillRect(x * scale, y * scale, scale, scale);
       if (cell === "K" && !hasKey) {
-        ctx.fillStyle = "#38bdf8";
+        ctx.fillStyle = tilePalette.key;
         ctx.fillRect(
           x * scale + scale * 0.25,
           y * scale + scale * 0.25,
@@ -165,7 +222,7 @@ const drawMinimap = () => {
       }
     });
   });
-  ctx.fillStyle = "#fbbf24";
+  ctx.fillStyle = tilePalette.player;
   ctx.fillRect(
     player.x * scale + scale * 0.25,
     player.y * scale + scale * 0.25,
@@ -288,14 +345,22 @@ document.addEventListener("keydown", (event) => {
   }
   const key = event.key;
   if (key === "ArrowUp") {
+    event.preventDefault();
     movePlayer(0, -1);
   } else if (key === "ArrowDown") {
+    event.preventDefault();
     movePlayer(0, 1);
   } else if (key === "ArrowLeft") {
+    event.preventDefault();
     movePlayer(-1, 0);
   } else if (key === "ArrowRight") {
+    event.preventDefault();
     movePlayer(1, 0);
   }
+});
+
+window.addEventListener("resize", () => {
+  draw();
 });
 
 resetGame();
