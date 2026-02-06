@@ -169,6 +169,10 @@ button.ghost {
   gap: 1.2rem;
 }
 
+.game-card {
+  min-height: 520px;
+}
+
 .card-header,
 .card-footer {
   display: flex;
@@ -205,6 +209,32 @@ button.ghost {
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
   cursor: pointer;
+}
+
+.game-wrapper {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.6);
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  min-height: 320px;
+}
+
+canvas {
+  background: #0f172a;
+  border-radius: 0.8rem;
+  border: 1px solid var(--border);
+}
+
+#miniMap {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 120px;
+  height: 120px;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.6);
 }
 
 .section {
@@ -308,6 +338,50 @@ button.ghost {
 .footer-links {
   display: flex;
   gap: 1.5rem;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(2, 6, 23, 0.75);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-card {
+  max-width: 480px;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.modal-result {
+  margin-top: 1.5rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.runaway {
+  position: relative;
 }
 
 .locked .content,

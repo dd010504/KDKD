@@ -3,17 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ciphertrail - Puzzle Game</title>
+    <title>For Kamilya</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body class="locked">
     <div class="gate" id="gate">
       <div class="gate-panel">
-        <p class="eyebrow">Ciphertrail access</p>
+        <p class="eyebrow">Private access</p>
         <h1>Enter the passphrase</h1>
-        <p class="subhead">
-          This landing page is reserved for playtesters and press.
-        </p>
+        <p class="subhead">This page is only for someone special.</p>
         <form class="gate-form" id="gateForm">
           <label class="gate-label" for="gatePassword">Passphrase</label>
           <input
@@ -26,150 +24,78 @@
           <button type="submit" class="primary">Unlock</button>
           <p class="gate-error" id="gateError" aria-live="polite"></p>
         </form>
-        <p class="gate-hint">Hint: the passphrase is "labyrinth".</p>
+        <p class="gate-hint">Hint: Keyword is LOVE.</p>
       </div>
     </div>
-
-    <header class="site-header content">
-      <nav class="nav">
-        <div class="logo">Ciphertrail</div>
-        <div class="nav-links">
-          <a href="#story">Story</a>
-          <a href="#features">Features</a>
-          <a href="#access">Access</a>
-        </div>
-        <button class="nav-cta" data-scroll="#access">Request Invite</button>
-      </nav>
-    </header>
 
     <main class="content">
       <section class="hero">
         <div class="hero-content">
-          <p class="eyebrow">Puzzle adventure</p>
-          <h1>A story-driven puzzle game hidden inside a labyrinth of clues.</h1>
+          <p class="eyebrow">A little adventure</p>
+          <h1>Kamilya, I made a tiny maze just for you.</h1>
           <p class="subhead">
-            Ciphertrail blends spatial riddles, narrative twists, and secret
-            ciphers across 12 chapters. Decode, map, and escape before the trail
-            disappears.
+            Use the arrow keys to explore, find the key, and unlock the final
+            question.
           </p>
           <div class="hero-actions">
-            <button class="primary" data-scroll="#access">Join the beta</button>
-            <button class="ghost" data-scroll="#story">View story</button>
+            <button class="primary" id="startGame">Start the game</button>
+            <button class="ghost" id="resetGame">Reset</button>
           </div>
           <div class="hero-metrics">
             <div>
-              <div class="metric">12</div>
-              <div class="metric-label">Chapters</div>
+              <div class="metric">Arrow keys</div>
+              <div class="metric-label">Move</div>
             </div>
             <div>
-              <div class="metric">60+</div>
-              <div class="metric-label">Puzzles</div>
+              <div class="metric">Find</div>
+              <div class="metric-label">The key</div>
             </div>
             <div>
-              <div class="metric">Q2 2026</div>
-              <div class="metric-label">Launch</div>
+              <div class="metric">Unlock</div>
+              <div class="metric-label">The question</div>
             </div>
           </div>
         </div>
-        <div class="hero-card">
+        <div class="hero-card game-card">
           <div class="card-header">
-            <span>Episode Zero brief</span>
-            <span class="pill">Closed beta</span>
+            <span>Maze run</span>
+            <span class="pill" id="keyStatus">Key hidden</span>
           </div>
-          <ul>
-            <li>Non-linear map with hidden routes</li>
-            <li>Audio clues and spatial memory</li>
-            <li>Chapter-based progress saves</li>
-            <li>New puzzle type every 15 minutes</li>
-          </ul>
+          <div class="game-wrapper">
+            <canvas id="gameCanvas" width="480" height="480"></canvas>
+            <canvas id="miniMap" width="140" height="140"></canvas>
+          </div>
           <div class="card-footer">
-            <span>Next playtest: Feb 20</span>
-            <button class="small" data-scroll="#access">Get code</button>
+            <span id="gameMessage">Find the key to continue.</span>
+            <button class="small" id="toggleGuide">Guide</button>
           </div>
-        </div>
-      </section>
-
-      <section id="story" class="section">
-        <div class="section-title">
-          <p class="eyebrow">Story</p>
-          <h2>Follow a vanished cartographer through a shifting city.</h2>
-        </div>
-        <div class="grid">
-          <article class="feature-card">
-            <h3>Lost route</h3>
-            <p>
-              Track the cartographer's final path by reading fragments of their
-              map and notes.
-            </p>
-          </article>
-          <article class="feature-card">
-            <h3>Echoes of the city</h3>
-            <p>
-              Solve sound-based riddles that change as the city reorders
-              itself.
-            </p>
-          </article>
-          <article class="feature-card">
-            <h3>The vault beneath</h3>
-            <p>
-              Each chapter unlocks a deeper layer of the labyrinth and the
-              truth behind it.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section id="features" class="section section-alt">
-        <div class="section-title">
-          <p class="eyebrow">Gameplay</p>
-          <h2>Puzzles that reward observation and collaboration.</h2>
-        </div>
-        <div class="work-grid">
-          <div class="work-card">
-            <div class="work-swatch swatch-1"></div>
-            <h3>Signal decoding</h3>
-            <p>Translate symbols, light, and sound into hidden paths.</p>
-          </div>
-          <div class="work-card">
-            <div class="work-swatch swatch-2"></div>
-            <h3>Adaptive difficulty</h3>
-            <p>Hints appear only if you linger too long on a clue.</p>
-          </div>
-          <div class="work-card">
-            <div class="work-swatch swatch-3"></div>
-            <h3>Shared journal</h3>
-            <p>Co-op play with a collaborative note and map system.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="access" class="section">
-        <div class="cta">
-          <div>
-            <p class="eyebrow">Playtest access</p>
-            <h2>Request your private invite.</h2>
-            <p class="subhead">
-              We send a limited number of keys each week. Tell us how you like
-              to solve puzzles.
-            </p>
-          </div>
-          <form class="cta-form" id="accessForm">
-            <input type="text" placeholder="Name" required />
-            <input type="email" placeholder="Email" required />
-            <button type="submit" class="primary">Request access</button>
-          </form>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer content">
-      <div>© 2026 Ciphertrail Studio</div>
-      <div class="footer-links">
-        <a href="#story">Story</a>
-        <a href="#features">Gameplay</a>
-        <a href="#access">Access</a>
+    <div class="modal hidden" id="questionModal" aria-hidden="true">
+      <div class="modal-card" id="modalCard">
+        <p class="eyebrow">Final question</p>
+        <h2>Will you be my girlfriend?</h2>
+        <div class="modal-actions">
+          <button class="primary" id="yesButton">Yes</button>
+          <button class="ghost runaway" id="noButton">No</button>
+        </div>
+        <p class="modal-result" id="modalResult"></p>
       </div>
-    </footer>
+    </div>
+
+    <div class="modal hidden" id="guideModal" aria-hidden="true">
+      <div class="modal-card">
+        <p class="eyebrow">How to play</p>
+        <h2>Find the key in the maze.</h2>
+        <p class="subhead">
+          Use the arrow keys to move. The minimap shows your progress in the
+          bottom right of the maze.
+        </p>
+        <button class="primary" id="closeGuide">Got it</button>
+      </div>
+    </div>
 
     <script src="./script.js"></script>
   </body>
