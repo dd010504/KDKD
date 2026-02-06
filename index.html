@@ -1,4 +1,4 @@
-gi<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,9 +34,18 @@ gi<!doctype html>
           <p class="eyebrow">A little adventure</p>
           <h1>Kamilya, I made a tiny maze just for you.</h1>
           <p class="subhead">
-            Use the arrow keys to explore, find the key, and unlock the final
-            question.
+            Use the arrow keys to guide David through each stage of the story
+            and unlock the final question.
           </p>
+          <div class="stage-panel">
+            <p class="stage-title" id="stageTitle">Stage 1</p>
+            <p class="stage-intro" id="stageIntro"></p>
+            <ul class="stage-objectives" id="objectiveList"></ul>
+            <div class="stage-meta">
+              <span id="timerLabel">Time: --</span>
+              <span id="inventoryLabel">Inventory: --</span>
+            </div>
+          </div>
           <div class="hero-actions">
             <button class="primary" id="startGame">Start the game</button>
             <button class="ghost" id="resetGame">Reset</button>

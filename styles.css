@@ -118,6 +118,45 @@ input {
   margin-bottom: 1rem;
 }
 
+.stage-panel {
+  margin: 1.5rem 0;
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(248, 250, 252, 0.08);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.stage-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--accent-2);
+}
+
+.stage-intro {
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.stage-objectives {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.stage-objectives li::before {
+  content: "•";
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+.stage-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -181,7 +220,7 @@ button.ghost {
 .hero-card {
   background: var(--card);
   border-radius: 0;
-  padding: 1.5rem;
+  padding: 1.25rem;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
   display: flex;
@@ -241,6 +280,7 @@ button.ghost {
   border: 1px solid var(--border);
   padding: 1rem;
   flex: 1;
+  min-height: 55vh;
 }
 
 canvas {
