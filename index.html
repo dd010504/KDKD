@@ -3,137 +3,171 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>KDKD</title>
+    <title>Ciphertrail - Puzzle Game</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <header class="site-header">
+  <body class="locked">
+    <div class="gate" id="gate">
+      <div class="gate-panel">
+        <p class="eyebrow">Ciphertrail access</p>
+        <h1>Enter the passphrase</h1>
+        <p class="subhead">
+          This landing page is reserved for playtesters and press.
+        </p>
+        <form class="gate-form" id="gateForm">
+          <label class="gate-label" for="gatePassword">Passphrase</label>
+          <input
+            type="password"
+            id="gatePassword"
+            placeholder="Enter code"
+            autocomplete="current-password"
+            required
+          />
+          <button type="submit" class="primary">Unlock</button>
+          <p class="gate-error" id="gateError" aria-live="polite"></p>
+        </form>
+        <p class="gate-hint">Hint: the passphrase is "labyrinth".</p>
+      </div>
+    </div>
+
+    <header class="site-header content">
       <nav class="nav">
-        <div class="logo">KDKD</div>
+        <div class="logo">Ciphertrail</div>
         <div class="nav-links">
+          <a href="#story">Story</a>
           <a href="#features">Features</a>
-          <a href="#work">Work</a>
-          <a href="#contact">Contact</a>
+          <a href="#access">Access</a>
         </div>
-        <button class="nav-cta" id="navCta">Get Started</button>
+        <button class="nav-cta" data-scroll="#access">Request Invite</button>
       </nav>
     </header>
 
-    <main>
+    <main class="content">
       <section class="hero">
         <div class="hero-content">
-          <p class="eyebrow">Build a modern website in minutes</p>
-          <h1>Clean, fast, and responsive websites for any project.</h1>
+          <p class="eyebrow">Puzzle adventure</p>
+          <h1>A story-driven puzzle game hidden inside a labyrinth of clues.</h1>
           <p class="subhead">
-            A simple starter layout with strong typography, clear sections, and
-            a polished visual system. Customize it with your own content.
+            Ciphertrail blends spatial riddles, narrative twists, and secret
+            ciphers across 12 chapters. Decode, map, and escape before the trail
+            disappears.
           </p>
           <div class="hero-actions">
-            <button class="primary" id="primaryCta">Start a project</button>
-            <button class="ghost">View examples</button>
+            <button class="primary" data-scroll="#access">Join the beta</button>
+            <button class="ghost" data-scroll="#story">View story</button>
           </div>
           <div class="hero-metrics">
             <div>
-              <div class="metric">20+</div>
-              <div class="metric-label">Layouts</div>
+              <div class="metric">12</div>
+              <div class="metric-label">Chapters</div>
             </div>
             <div>
-              <div class="metric">99%</div>
-              <div class="metric-label">Performance</div>
+              <div class="metric">60+</div>
+              <div class="metric-label">Puzzles</div>
             </div>
             <div>
-              <div class="metric">24/7</div>
-              <div class="metric-label">Support</div>
+              <div class="metric">Q2 2026</div>
+              <div class="metric-label">Launch</div>
             </div>
           </div>
         </div>
         <div class="hero-card">
           <div class="card-header">
-            <span>Launch checklist</span>
-            <span class="pill">Ready</span>
+            <span>Episode Zero brief</span>
+            <span class="pill">Closed beta</span>
           </div>
           <ul>
-            <li>Accessible design system</li>
-            <li>Mobile-first layout</li>
-            <li>Reusable components</li>
-            <li>Fast loading assets</li>
+            <li>Non-linear map with hidden routes</li>
+            <li>Audio clues and spatial memory</li>
+            <li>Chapter-based progress saves</li>
+            <li>New puzzle type every 15 minutes</li>
           </ul>
           <div class="card-footer">
-            <span>Last updated today</span>
-            <button class="small">Open</button>
+            <span>Next playtest: Feb 20</span>
+            <button class="small" data-scroll="#access">Get code</button>
           </div>
         </div>
       </section>
 
-      <section id="features" class="section">
+      <section id="story" class="section">
         <div class="section-title">
-          <p class="eyebrow">Features</p>
-          <h2>Everything you need to get online quickly.</h2>
+          <p class="eyebrow">Story</p>
+          <h2>Follow a vanished cartographer through a shifting city.</h2>
         </div>
         <div class="grid">
           <article class="feature-card">
-            <h3>Flexible layout</h3>
-            <p>Swap sections, cards, and content without breaking the flow.</p>
+            <h3>Lost route</h3>
+            <p>
+              Track the cartographer's final path by reading fragments of their
+              map and notes.
+            </p>
           </article>
           <article class="feature-card">
-            <h3>Smart hierarchy</h3>
-            <p>Typography and spacing keep pages easy to scan.</p>
+            <h3>Echoes of the city</h3>
+            <p>
+              Solve sound-based riddles that change as the city reorders
+              itself.
+            </p>
           </article>
           <article class="feature-card">
-            <h3>Built for speed</h3>
-            <p>Lightweight HTML and CSS keeps load times low.</p>
+            <h3>The vault beneath</h3>
+            <p>
+              Each chapter unlocks a deeper layer of the labyrinth and the
+              truth behind it.
+            </p>
           </article>
         </div>
       </section>
 
-      <section id="work" class="section section-alt">
+      <section id="features" class="section section-alt">
         <div class="section-title">
-          <p class="eyebrow">Recent work</p>
-          <h2>Showcase what you have built.</h2>
+          <p class="eyebrow">Gameplay</p>
+          <h2>Puzzles that reward observation and collaboration.</h2>
         </div>
         <div class="work-grid">
           <div class="work-card">
             <div class="work-swatch swatch-1"></div>
-            <h3>Commerce template</h3>
-            <p>Light, inviting storefront for product launches.</p>
+            <h3>Signal decoding</h3>
+            <p>Translate symbols, light, and sound into hidden paths.</p>
           </div>
           <div class="work-card">
             <div class="work-swatch swatch-2"></div>
-            <h3>Agency landing</h3>
-            <p>Bold visuals with clear calls to action.</p>
+            <h3>Adaptive difficulty</h3>
+            <p>Hints appear only if you linger too long on a clue.</p>
           </div>
           <div class="work-card">
             <div class="work-swatch swatch-3"></div>
-            <h3>Portfolio grid</h3>
-            <p>Flexible modules for photo-heavy sites.</p>
+            <h3>Shared journal</h3>
+            <p>Co-op play with a collaborative note and map system.</p>
           </div>
         </div>
       </section>
 
-      <section id="contact" class="section">
+      <section id="access" class="section">
         <div class="cta">
           <div>
-            <p class="eyebrow">Ready to launch?</p>
-            <h2>Tell us about your project.</h2>
+            <p class="eyebrow">Playtest access</p>
+            <h2>Request your private invite.</h2>
             <p class="subhead">
-              Drop a few details and we will respond with a tailored plan.
+              We send a limited number of keys each week. Tell us how you like
+              to solve puzzles.
             </p>
           </div>
-          <form class="cta-form">
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <button type="submit" class="primary">Request info</button>
+          <form class="cta-form" id="accessForm">
+            <input type="text" placeholder="Name" required />
+            <input type="email" placeholder="Email" required />
+            <button type="submit" class="primary">Request access</button>
           </form>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div>© 2026 KDKD Studio</div>
+    <footer class="site-footer content">
+      <div>© 2026 Ciphertrail Studio</div>
       <div class="footer-links">
-        <a href="#features">Features</a>
-        <a href="#work">Work</a>
-        <a href="#contact">Contact</a>
+        <a href="#story">Story</a>
+        <a href="#features">Gameplay</a>
+        <a href="#access">Access</a>
       </div>
     </footer>
 
