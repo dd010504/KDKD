@@ -54,6 +54,7 @@ const toggleGuide = document.getElementById("toggleGuide");
 const closeGuide = document.getElementById("closeGuide");
 const dismissHero = document.getElementById("dismissHero");
 const heroContent = document.querySelector(".hero-content");
+const confetti = document.getElementById("confetti");
 const yesButton = document.getElementById("yesButton");
 const noButton = document.getElementById("noButton");
 const modalResult = document.getElementById("modalResult");
@@ -109,23 +110,23 @@ const stages = [
     timer: null,
     tiles: [
       "###################",
-      "#@............#...#",
-      "#.###.###.##.#.#..#",
-      "#...#.....#..#.#..#",
-      "###.#.###.#.##.####",
-      "#...#...#.#....#..#",
-      "#.#####.#.####.#.##",
-      "#.....#.#....#.#..#",
-      "#.###.#.####.#.##.#",
-      "#...#.#....#.#....#",
-      "###.#.####.#.####.#",
-      "#...#......#...#..#",
-      "#.#####.##.#.#.#.##",
-      "#...#...#..#.#.#..#",
-      "#.###.#.####.#.####",
-      "#.S.#.#....#...#..#",
-      "#.###.#.##.#.###.E#",
-      "#.....C.#....#....#",
+      "#@....#.....#.....#",
+      "#.###.#.###.#.###.#",
+      "#...#.#...#.#...#.#",
+      "#.#.#.###.#.###.#.#",
+      "#.#.#.....#.....#.#",
+      "#.#.#####.#####.#.#",
+      "#.#.....#.....#...#",
+      "#.###.#.###.#.###.#",
+      "#.....#...#.#.....#",
+      "###.###.#.#.###.###",
+      "#.....#.#.#.....#.#",
+      "#.###.#.#.#####.#.#",
+      "#...#.#.#.....#...#",
+      "#.#.#.#.#####.#.###",
+      "#.#.#.#.....#.#...#",
+      "#.#.#.#####.#.###.#",
+      "#...S...C....#..E.#",
       "###################",
     ],
     items: [
@@ -158,7 +159,7 @@ const stages = [
       "#.#.#####.#.###.#.#",
       "#.#.....#.#.....#.#",
       "#.#####.#.###...#.#",
-      "#.....F.#......E..#",
+      "#.....F.#.....E..#",
       "###################",
     ],
     items: [{ id: "flowers", symbol: "F", name: "Buy flowers" }],
@@ -204,23 +205,23 @@ const stages = [
     timerStartOnClose: true,
     tiles: [
       "###################",
-      "#@.....#.....#...E#",
-      "#.###.#.###.#.###.#",
-      "#...#.#...#.#...#.#",
-      "###.#.###.#.###.#.#",
-      "#...#...#.#...#...#",
-      "#.#####.#.#####.###",
-      "#.....#.#.....#...#",
-      "#.###.#.#####.#.###",
-      "#...#.#.....#.#...#",
-      "###.#.#####.#.###.#",
+      "#@....#...........#",
+      "#.###.#.#########.#",
+      "#...#.#.....#.....#",
+      "###.#.###.#.#.###.#",
       "#...#.....#.#...#.#",
-      "#.###.###.#.###.#.#",
-      "#...#...#.#...#...#",
-      "#.###.#.#.###.###.#",
-      "#...#.#.#.....#...#",
-      "#.###.#.#####.#.###",
-      "#.....#.......#...#",
+      "#.#####.###.###.#.#",
+      "#.....#...#.....#.#",
+      "#.###.###.#.#####.#",
+      "#...#.....#.....#.#",
+      "###.#.#########.#.#",
+      "#...#.......#...#.#",
+      "#.#########.#.###.#",
+      "#.........#.#.....#",
+      "#.#######.#.#####.#",
+      "#.....#...#.....#.#",
+      "#.###.#.#####.#.#.#",
+      "#...#.........#..E#",
       "###################",
     ],
     items: [],
@@ -354,7 +355,8 @@ const updateObjectives = (stage) => {
   objectiveList.innerHTML = "";
   stage.items.forEach((item) => {
     const li = document.createElement("li");
-    li.textContent = item.name;
+    const count = item.collected ? 1 : 0;
+    li.textContent = `${item.name} (${count}/1)`;
     objectiveList.appendChild(li);
   });
   if (stage.extraObjectives?.length) {
@@ -733,6 +735,16 @@ const draw = () => {
     context.stroke();
   }
 
+  context.fillStyle = "#0b1120";
+  context.font = `${Math.max(12, Math.floor(tileSize / 2))}px "Segoe UI", sans-serif`;
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText(
+    "D",
+    offsetX + player.x * tileSize + tileSize / 2,
+    offsetY + player.y * tileSize + tileSize / 2
+  );
+
   if (followerActive) {
     context.fillStyle = tilePalette.girl;
     context.beginPath();
@@ -744,6 +756,15 @@ const draw = () => {
       Math.PI * 2
     );
     context.fill();
+    context.fillStyle = "#0b1120";
+    context.font = `${Math.max(12, Math.floor(tileSize / 2))}px "Segoe UI", sans-serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(
+      "K",
+      offsetX + followerPos.x * tileSize + tileSize / 2,
+      offsetY + followerPos.y * tileSize + tileSize / 2
+    );
   }
 
   drawMinimap();
@@ -839,6 +860,16 @@ const handleTileAction = (cell) => {
   }
   const item = stage.items.find((stageItem) => stageItem.symbol === cell);
   if (item && !item.collected) {
+    if (item.id === "clothes") {
+      const showerItem = stage.items.find((stageItem) => stageItem.id === "shower");
+      if (showerItem && !showerItem.collected) {
+        if (gameMessage) {
+          gameMessage.textContent = "You need to shower first!";
+        }
+        window.alert("You need to shower first!");
+        return;
+      }
+    }
     item.collected = true;
     if (item.id === "shower") {
       davidState = "showered";
@@ -870,6 +901,7 @@ const handleTileAction = (cell) => {
       }
     }
     updateInventoryLabel();
+    updateObjectives(stage);
     setTile(player.x, player.y, ".");
   }
 
@@ -982,6 +1014,32 @@ const moveNoButton = () => {
   noButton.style.top = `${randomY}px`;
 };
 
+const launchConfetti = () => {
+  if (!confetti) {
+    return;
+  }
+  confetti.innerHTML = "";
+  const colors = ["#f472b6", "#38bdf8", "#22d3ee", "#facc15", "#34d399"];
+  for (let i = 0; i < 90; i += 1) {
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    const size = 6 + Math.random() * 8;
+    piece.style.width = `${size}px`;
+    piece.style.height = `${size * 1.4}px`;
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.top = `${-10 - Math.random() * 20}%`;
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDuration = `${1.4 + Math.random() * 1.2}s`;
+    piece.style.animationDelay = `${Math.random() * 0.2}s`;
+    confetti.appendChild(piece);
+  }
+  window.setTimeout(() => {
+    if (confetti) {
+      confetti.innerHTML = "";
+    }
+  }, 2200);
+};
+
 if (startGameButton) {
   startGameButton.addEventListener("click", () => {
     if (!gameActive) {
@@ -1016,6 +1074,7 @@ if (yesButton) {
     if (yesButton) {
       yesButton.disabled = true;
     }
+    launchConfetti();
   });
 }
 

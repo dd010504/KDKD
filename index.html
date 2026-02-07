@@ -43,11 +43,6 @@
           <div class="stage-panel">
             <p class="stage-title" id="stageTitle">Stage 1</p>
             <p class="stage-intro" id="stageIntro"></p>
-            <ul class="stage-objectives" id="objectiveList"></ul>
-            <div class="stage-meta">
-              <span id="timerLabel">Time: --</span>
-              <span id="inventoryLabel">Inventory: --</span>
-            </div>
           </div>
           <div class="hero-actions">
             <button class="primary" id="startGame">Start the game</button>
@@ -85,6 +80,14 @@
       </section>
     </main>
 
+    <aside class="hud" id="hud">
+      <div class="hud-row">
+        <span class="hud-label" id="timerLabel">Time: --</span>
+        <span class="hud-label" id="inventoryLabel">Inventory: --</span>
+      </div>
+      <ul class="hud-objectives" id="objectiveList"></ul>
+    </aside>
+
     <div class="modal hidden" id="questionModal" aria-hidden="true">
       <div class="modal-card" id="modalCard">
         <p class="eyebrow">Final question</p>
@@ -106,6 +109,8 @@
         <button class="primary" id="closeGuide">Start stage</button>
       </div>
     </div>
+
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
 
     <script src="./script.js"></script>
   </body>
