@@ -12,6 +12,11 @@ const unlockGate = () => {
   }
   document.body.classList.remove("locked");
   sessionStorage.setItem(ACCESS_STORAGE_KEY, "granted");
+  gateUnlocked = true;
+  if (!gameInitialized) {
+    resetGame();
+    gameInitialized = true;
+  }
 };
 
 if (sessionStorage.getItem(ACCESS_STORAGE_KEY) === "granted") {
@@ -41,9 +46,14 @@ const startGameButton = document.getElementById("startGame");
 const resetGameButton = document.getElementById("resetGame");
 const questionModal = document.getElementById("questionModal");
 const modalCard = document.getElementById("modalCard");
-const guideModal = document.getElementById("guideModal");
+const stageModal = document.getElementById("stageModal");
+const stageModalTitle = document.getElementById("stageModalTitle");
+const stageModalIntro = document.getElementById("stageModalIntro");
+const stageModalObjectives = document.getElementById("stageModalObjectives");
 const toggleGuide = document.getElementById("toggleGuide");
 const closeGuide = document.getElementById("closeGuide");
+const dismissHero = document.getElementById("dismissHero");
+const heroContent = document.querySelector(".hero-content");
 const yesButton = document.getElementById("yesButton");
 const noButton = document.getElementById("noButton");
 const modalResult = document.getElementById("modalResult");
@@ -98,21 +108,25 @@ const stages = [
     intro: "David wakes up, showers, gets dressed, and heads out the door.",
     timer: null,
     tiles: [
-      "###############",
-      "#@..S....#....#",
-      "#.###.###.#.###",
-      "#...#.....#...#",
-      "###.#.###.###.#",
-      "#...#...#.....#",
-      "#.#####.#.###.#",
-      "#.....#.#...#.#",
-      "#.###.#.###.#.#",
-      "#...#.#.....#.#",
-      "###.#.#####.#.#",
-      "#...#.....#...#",
-      "#.#####.#.###.#",
-      "#.....C.#....E#",
-      "###############",
+      "###################",
+      "#@............#...#",
+      "#.###.###.##.#.#..#",
+      "#...#.....#..#.#..#",
+      "###.#.###.#.##.####",
+      "#...#...#.#....#..#",
+      "#.#####.#.####.#.##",
+      "#.....#.#....#.#..#",
+      "#.###.#.####.#.##.#",
+      "#...#.#....#.#....#",
+      "###.#.####.#.####.#",
+      "#...#......#...#..#",
+      "#.#####.##.#.#.#.##",
+      "#...#...#..#.#.#..#",
+      "#.###.#.####.#.####",
+      "#.S.#.#....#...#..#",
+      "#.###.#.##.#.###.E#",
+      "#.....C.#....#....#",
+      "###################",
     ],
     items: [
       { id: "shower", symbol: "S", name: "Take a shower" },
@@ -127,21 +141,25 @@ const stages = [
     intro: "David stops at the flower shop to pick out the perfect bouquet.",
     timer: null,
     tiles: [
-      "###############",
-      "#@....#.......#",
-      "#.###.#.#####.#",
-      "#...#.#.....#.#",
-      "###.#.###.#.#.#",
-      "#...#.....#.#.#",
-      "#.#####.###.#.#",
-      "#.....#...#...#",
-      "#.###.###.###.#",
-      "#...#.....#...#",
-      "###.#####.#.###",
-      "#...#...#.#...#",
-      "#.###.#.#.###.#",
-      "#...F.#.....E.#",
-      "###############",
+      "###################",
+      "#@..#......#......#",
+      "#.#.#.####.#.####.#",
+      "#.#.#....#.#....#.#",
+      "#.#.####.#.###.#..#",
+      "#.#....#.#.....#..#",
+      "#.####.#.####.#.###",
+      "#......#.....#....#",
+      "#.#######.###.###.#",
+      "#.....#...#.....#.#",
+      "###.#.#.###.###.#.#",
+      "#...#.#.....#...#.#",
+      "#.#.#.#####.#.###.#",
+      "#.#.#.....#.#...#.#",
+      "#.#.#####.#.###.#.#",
+      "#.#.....#.#.....#.#",
+      "#.#####.#.###...#.#",
+      "#.....F.#......E..#",
+      "###################",
     ],
     items: [{ id: "flowers", symbol: "F", name: "Buy flowers" }],
     extraObjectives: ["Head out"],
@@ -152,22 +170,27 @@ const stages = [
     name: "Stage 3: Back Home",
     intro: "Oh no! David forgot something at home. He has limited time inside!",
     timer: 35,
+    timerStartOnClose: true,
     tiles: [
-      "###############",
-      "#@....#.......#",
-      "#.###.#.#####.#",
-      "#...#.#...#...#",
-      "###.#.###.#.#.#",
-      "#...#.....#.#.#",
-      "#.#####.###.#.#",
-      "#.....#...#...#",
-      "#.###.###.###.#",
-      "#...#.....#...#",
-      "###.#####.#.###",
-      "#...#...#.#...#",
-      "#.###.#.#.###.#",
-      "#...B.#.....E.#",
-      "###############",
+      "###################",
+      "#@....#....#.....E#",
+      "#.###.#.##.#.####.#",
+      "#...#.#..#.#....#.#",
+      "###.#.##.#.####.#.#",
+      "#...#....#....#...#",
+      "#.#####.#######.#.#",
+      "#.....#.....#...#.#",
+      "#.###.#.###.#.###.#",
+      "#...#.#...#.#...#.#",
+      "###.#.###.#.###.#.#",
+      "#...#...#.#.....#.#",
+      "#.###.#.#.#######.#",
+      "#...#.#.#.....#...#",
+      "#.###.#.#####.#.###",
+      "#...#.#.....#.#...#",
+      "#.###.#####.#.###.#",
+      "#....B....#.......#",
+      "###################",
     ],
     items: [{ id: "forgotten", symbol: "B", name: "Grab the forgotten item" }],
     extraObjectives: ["Escape before time runs out"],
@@ -177,23 +200,28 @@ const stages = [
     id: 4,
     name: "Stage 4: Rush to Anju",
     intro: "David rushes to Anju where Kamiliya is waiting.",
-    timer: null,
+    timer: 40,
+    timerStartOnClose: true,
     tiles: [
-      "###############",
-      "#@....#.......#",
-      "#.###.#.#####.#",
-      "#...#.#.....#.#",
-      "###.#.###.#.#.#",
-      "#...#.....#.#.#",
-      "#.#####.###.#.#",
-      "#.....#...#...#",
-      "#.###.###.###.#",
-      "#...#.....#...#",
-      "###.#####.#.###",
-      "#...#...#.#...#",
-      "#.###.#.#.###.#",
-      "#.....#.....E.#",
-      "###############",
+      "###################",
+      "#@.....#.....#...E#",
+      "#.###.#.###.#.###.#",
+      "#...#.#...#.#...#.#",
+      "###.#.###.#.###.#.#",
+      "#...#...#.#...#...#",
+      "#.#####.#.#####.###",
+      "#.....#.#.....#...#",
+      "#.###.#.#####.#.###",
+      "#...#.#.....#.#...#",
+      "###.#.#####.#.###.#",
+      "#...#.....#.#...#.#",
+      "#.###.###.#.###.#.#",
+      "#...#...#.#...#...#",
+      "#.###.#.#.###.###.#",
+      "#...#.#.#.....#...#",
+      "#.###.#.#####.#.###",
+      "#.....#.......#...#",
+      "###################",
     ],
     items: [],
     extraObjectives: ["Arrive at Anju"],
@@ -205,21 +233,25 @@ const stages = [
     intro: "David gives her flowers, they eat together, then head to the park.",
     timer: null,
     tiles: [
-      "###############",
-      "#@....#.......#",
-      "#.###.#.#####.#",
-      "#...#.#.....#.#",
-      "###.#.###.#.#.#",
-      "#...#..K..#.#.#",
-      "#.#####.###.#.#",
-      "#.....#...#...#",
-      "#.###.###.###.#",
-      "#...#.....#...#",
-      "###.#####.#.###",
-      "#...#..N#.#...#",
-      "#.###.#.#.###.#",
-      "#.....#.....E.#",
-      "###############",
+      "###################",
+      "#@....#....#......#",
+      "#.###.#.##.#.####.#",
+      "#...#.#..#.#....#.#",
+      "###.#.##.#.####.#.#",
+      "#...#....#....#...#",
+      "#.#####.#######.#.#",
+      "#.....#.....#...#.#",
+      "#.###.#.###.#.###.#",
+      "#...#.#...#.#...#.#",
+      "###.#.###.#.###.#.#",
+      "#...#...#.#.....#.#",
+      "#.###.#.#.#######.#",
+      "#...#.#.#.....#...#",
+      "#.###.#.#####.#.###",
+      "#...#.#.....#.#...#",
+      "#.###.#####.#.###.#",
+      "#....K..N.#.....E.#",
+      "###################",
     ],
     items: [{ id: "dinner", symbol: "N", name: "Eat together" }],
     extraObjectives: ["Give her the flowers", "Drive to the park"],
@@ -231,21 +263,25 @@ const stages = [
     intro: "David is ready. Meet Kamiliya at the park.",
     timer: null,
     tiles: [
-      "###############",
-      "#@....#.......#",
-      "#.###.#.#####.#",
-      "#...#.#.....#.#",
-      "###.#.###.#.#.#",
-      "#...#.....#.#.#",
-      "#.#####.###.#.#",
-      "#.....#...#...#",
-      "#.###.###.###.#",
-      "#...#.....#...#",
-      "###.#####.#.###",
-      "#...#.....#...#",
-      "#.###.#.#.###.#",
-      "#.....#...K...#",
-      "###############",
+      "###################",
+      "#@....#....#.....E#",
+      "#.###.#.##.#.####.#",
+      "#...#.#..#.#....#.#",
+      "###.#.##.#.####.#.#",
+      "#...#....#....#...#",
+      "#.#####.#######.#.#",
+      "#.....#.....#...#.#",
+      "#.###.#.###.#.###.#",
+      "#...#.#...#.#...#.#",
+      "###.#.###.#.###.#.#",
+      "#...#...#.#.....#.#",
+      "#.###.#.#.#######.#",
+      "#...#.#.#.....#...#",
+      "#.###.#.#####.#.###",
+      "#...#.#.....#.#...#",
+      "#.###.#####.#.###.#",
+      "#....K....#.......#",
+      "###################",
     ],
     items: [],
     extraObjectives: ["Ask the question"],
@@ -265,6 +301,11 @@ let inventory = {
 };
 let davidState = "sleepy";
 let gaveFlowers = false;
+let followerActive = false;
+let followerPos = { x: 0, y: 0 };
+let stageLocked = false;
+let gateUnlocked = false;
+let gameInitialized = false;
 
 const getTile = (x, y) => currentMaze[y]?.[x] ?? "#";
 
@@ -329,6 +370,27 @@ const updateObjectives = (stage) => {
   }
 };
 
+const updateStageModal = (stage) => {
+  if (!stageModalTitle || !stageModalIntro || !stageModalObjectives) {
+    return;
+  }
+  stageModalTitle.textContent = stage.name;
+  stageModalIntro.textContent = stage.intro;
+  stageModalObjectives.innerHTML = "";
+  stage.items.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item.name;
+    stageModalObjectives.appendChild(li);
+  });
+  if (stage.extraObjectives?.length) {
+    stage.extraObjectives.forEach((objective) => {
+      const li = document.createElement("li");
+      li.textContent = objective;
+      stageModalObjectives.appendChild(li);
+    });
+  }
+};
+
 const updateStageUI = () => {
   const stage = stages[currentStageIndex];
   if (!stage) {
@@ -346,6 +408,35 @@ const updateStageUI = () => {
     timerLabel.textContent = stage.timer
       ? `Time: ${timeRemaining ?? stage.timer}s`
       : "Time: --";
+  }
+};
+
+const openStageModal = () => {
+  const stage = stages[currentStageIndex];
+  if (!stageModal || !stage) {
+    return;
+  }
+  if (!gateUnlocked) {
+    return;
+  }
+  updateStageModal(stage);
+  stageModal.classList.remove("hidden");
+  stageModal.setAttribute("aria-hidden", "false");
+  stageLocked = true;
+  gameActive = false;
+};
+
+const closeStageModal = () => {
+  const stage = stages[currentStageIndex];
+  if (!stageModal || !stage) {
+    return;
+  }
+  stageModal.classList.add("hidden");
+  stageModal.setAttribute("aria-hidden", "true");
+  stageLocked = false;
+  gameActive = true;
+  if (stage.timer && stage.timerStartOnClose && timeRemaining === null) {
+    startTimer(stage.timer);
   }
 };
 
@@ -393,6 +484,7 @@ const loadStage = (index) => {
   if (stage.id === 5) {
     gaveFlowers = false;
   }
+  followerActive = false;
   let startFound = false;
   currentMaze.forEach((row, y) => {
     row.forEach((cell, x) => {
@@ -409,7 +501,7 @@ const loadStage = (index) => {
   if (stage.id === 1) {
     davidState = "sleepy";
   }
-  if (stage.timer) {
+  if (stage.timer && !stage.timerStartOnClose) {
     startTimer(stage.timer);
   } else {
     clearTimer();
@@ -422,6 +514,7 @@ const loadStage = (index) => {
     keyStatus.textContent = "In progress";
   }
   updateStageUI();
+  openStageModal();
   draw();
 };
 
@@ -431,6 +524,8 @@ const resetGame = () => {
     forgotten: false,
   };
   davidState = "sleepy";
+  followerActive = false;
+  stageLocked = false;
   gameActive = true;
   if (keyStatus) {
     keyStatus.textContent = "In progress";
@@ -469,9 +564,16 @@ const getTileSize = () => {
   if (!currentMaze.length) {
     return 32;
   }
-  return Math.floor(
-    Math.min(canvas.width / currentMaze[0].length, canvas.height / currentMaze.length)
+  const targetVisibleTiles = 7;
+  const baseSize = Math.ceil(
+    Math.max(canvas.width, canvas.height) / targetVisibleTiles
   );
+  const cols = currentMaze[0].length;
+  const rows = currentMaze.length;
+  const minFillWidth = Math.ceil((canvas.width + 2) / cols);
+  const minFillHeight = Math.ceil((canvas.height + 2) / rows);
+  const minFillSize = Math.max(minFillWidth, minFillHeight) + 10;
+  return Math.max(24, baseSize, minFillSize);
 };
 
 const draw = () => {
@@ -491,8 +593,25 @@ const draw = () => {
   const tileSize = getTileSize();
   const boardWidth = currentMaze[0].length * tileSize;
   const boardHeight = currentMaze.length * tileSize;
-  const offsetX = Math.floor((canvas.width - boardWidth) / 2);
-  const offsetY = Math.floor((canvas.height - boardHeight) / 2);
+  const centerX = canvas.width / 2 - (player.x + 0.5) * tileSize;
+  const centerY = canvas.height / 2 - (player.y + 0.5) * tileSize;
+  const minOffsetX = canvas.width - boardWidth;
+  const minOffsetY = canvas.height - boardHeight;
+  const maxOffsetX = 0;
+  const maxOffsetY = 0;
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const offsetX =
+    minOffsetX > 0
+      ? Math.floor(minOffsetX / 2)
+      : Math.floor(clamp(centerX, minOffsetX, maxOffsetX));
+  const playerMinOffsetY = canvas.height - (player.y + 1) * tileSize;
+  const playerMaxOffsetY = -player.y * tileSize;
+  const safeMinOffsetY = Math.max(minOffsetY, playerMinOffsetY);
+  const safeMaxOffsetY = Math.min(maxOffsetY, playerMaxOffsetY);
+  const offsetY =
+    minOffsetY > 0
+      ? Math.floor(minOffsetY / 2)
+      : Math.floor(clamp(centerY, safeMinOffsetY, safeMaxOffsetY));
 
   currentMaze.forEach((row, y) => {
     [...row].forEach((cell, x) => {
@@ -614,6 +733,19 @@ const draw = () => {
     context.stroke();
   }
 
+  if (followerActive) {
+    context.fillStyle = tilePalette.girl;
+    context.beginPath();
+    context.arc(
+      offsetX + followerPos.x * tileSize + tileSize / 2,
+      offsetY + followerPos.y * tileSize + tileSize / 2,
+      tileSize / 3,
+      0,
+      Math.PI * 2
+    );
+    context.fill();
+  }
+
   drawMinimap();
 };
 
@@ -625,17 +757,27 @@ const drawMinimap = () => {
   if (!ctx) {
     return;
   }
-  const scale = minimap.width / currentMaze[0].length;
+  const viewRadius = 4;
+  const viewSize = viewRadius * 2 + 1;
+  const scale = minimap.width / viewSize;
   ctx.clearRect(0, 0, minimap.width, minimap.height);
-  currentMaze.forEach((row, y) => {
-    [...row].forEach((cell, x) => {
+  for (let y = -viewRadius; y <= viewRadius; y += 1) {
+    for (let x = -viewRadius; x <= viewRadius; x += 1) {
+      const mapX = player.x + x;
+      const mapY = player.y + y;
+      const cell = currentMaze[mapY]?.[mapX] ?? "#";
       ctx.fillStyle = cell === "#" ? minimapPalette.wall : minimapPalette.floor;
-      ctx.fillRect(x * scale, y * scale, scale, scale);
+      ctx.fillRect(
+        (x + viewRadius) * scale,
+        (y + viewRadius) * scale,
+        scale,
+        scale
+      );
       if (cell === "F" || cell === "B" || cell === "N" || cell === "S" || cell === "C") {
         ctx.fillStyle = tilePalette.key;
         ctx.fillRect(
-          x * scale + scale * 0.25,
-          y * scale + scale * 0.25,
+          (x + viewRadius) * scale + scale * 0.25,
+          (y + viewRadius) * scale + scale * 0.25,
           scale * 0.5,
           scale * 0.5
         );
@@ -643,20 +785,42 @@ const drawMinimap = () => {
       if (cell === "K") {
         ctx.fillStyle = tilePalette.girl;
         ctx.fillRect(
-          x * scale + scale * 0.25,
-          y * scale + scale * 0.25,
+          (x + viewRadius) * scale + scale * 0.25,
+          (y + viewRadius) * scale + scale * 0.25,
           scale * 0.5,
           scale * 0.5
         );
       }
-    });
-  });
+      if (cell === "E") {
+        ctx.fillStyle = tilePalette.exit;
+        ctx.fillRect(
+          (x + viewRadius) * scale + scale * 0.3,
+          (y + viewRadius) * scale + scale * 0.3,
+          scale * 0.4,
+          scale * 0.4
+        );
+      }
+    }
+  }
+  if (followerActive) {
+    const fx = followerPos.x - player.x + viewRadius;
+    const fy = followerPos.y - player.y + viewRadius;
+    if (fx >= 0 && fx < viewSize && fy >= 0 && fy < viewSize) {
+      ctx.fillStyle = tilePalette.girl;
+      ctx.fillRect(
+        fx * scale + scale * 0.2,
+        fy * scale + scale * 0.2,
+        scale * 0.6,
+        scale * 0.6
+      );
+    }
+  }
   ctx.fillStyle = getDavidColor();
   ctx.fillRect(
-    player.x * scale + scale * 0.25,
-    player.y * scale + scale * 0.25,
-    scale * 0.5,
-    scale * 0.5
+    viewRadius * scale + scale * 0.2,
+    viewRadius * scale + scale * 0.2,
+    scale * 0.6,
+    scale * 0.6
   );
 };
 
@@ -713,6 +877,9 @@ const handleTileAction = (cell) => {
     if (stage.id === 5) {
       if (inventory.flowers) {
         gaveFlowers = true;
+        followerActive = true;
+        followerPos = { x: player.x, y: player.y };
+        setTile(player.x, player.y, ".");
         if (gameMessage) {
           gameMessage.textContent = "Flowers delivered. Enjoy dinner!";
         }
@@ -721,16 +888,31 @@ const handleTileAction = (cell) => {
       }
     }
     if (stage.id === 6) {
-      openQuestion();
+      followerActive = true;
+      followerPos = { x: player.x, y: player.y };
+      setTile(player.x, player.y, ".");
+      if (gameMessage) {
+        gameMessage.textContent = "Kamiliya is with you. Head to the exit.";
+      }
     }
   }
 
-  if (cell === "E" && isStageComplete(stage)) {
-    if (currentStageIndex < stages.length - 1) {
-      loadStage(currentStageIndex + 1);
+  if (cell === "E") {
+    if (stage.id === 6) {
+      if (followerActive) {
+        openQuestion();
+      } else if (gameMessage) {
+        gameMessage.textContent = "Find Kamiliya first.";
+      }
+      return;
     }
-  } else if (cell === "E" && gameMessage) {
-    gameMessage.textContent = "Finish the objectives before leaving.";
+    if (isStageComplete(stage)) {
+      if (currentStageIndex < stages.length - 1) {
+        loadStage(currentStageIndex + 1);
+      }
+    } else if (gameMessage) {
+      gameMessage.textContent = "Finish the objectives before leaving.";
+    }
   }
 };
 
@@ -743,7 +925,11 @@ const movePlayer = (dx, dy) => {
   if (getTile(nextX, nextY) === "#") {
     return;
   }
+  const previousPosition = { ...player };
   player = { x: nextX, y: nextY };
+  if (followerActive) {
+    followerPos = previousPosition;
+  }
   const cell = getTile(player.x, player.y);
   handleTileAction(cell);
 
@@ -761,6 +947,7 @@ const openQuestion = () => {
   }
   questionModal.classList.remove("hidden");
   questionModal.setAttribute("aria-hidden", "false");
+  gameActive = false;
 };
 
 const closeQuestion = () => {
@@ -772,19 +959,11 @@ const closeQuestion = () => {
 };
 
 const showGuide = () => {
-  if (!guideModal) {
-    return;
-  }
-  guideModal.classList.remove("hidden");
-  guideModal.setAttribute("aria-hidden", "false");
+  openStageModal();
 };
 
 const hideGuide = () => {
-  if (!guideModal) {
-    return;
-  }
-  guideModal.classList.add("hidden");
-  guideModal.setAttribute("aria-hidden", "true");
+  closeStageModal();
 };
 
 const moveNoButton = () => {
@@ -821,6 +1000,12 @@ if (toggleGuide) {
 
 if (closeGuide) {
   closeGuide.addEventListener("click", hideGuide);
+}
+
+if (dismissHero && heroContent) {
+  dismissHero.addEventListener("click", () => {
+    heroContent.classList.add("hidden");
+  });
 }
 
 if (yesButton) {
@@ -863,5 +1048,3 @@ document.addEventListener("keydown", (event) => {
 window.addEventListener("resize", () => {
   draw();
 });
-
-resetGame();

@@ -28,6 +28,7 @@ body {
   background: radial-gradient(circle at top, #1e1b4b, #0f172a 55%, #111827);
   color: var(--text);
   line-height: 1.6;
+  overflow: hidden;
 }
 
 a {
@@ -104,12 +105,31 @@ input {
   top: 2rem;
   left: 2rem;
   max-width: 360px;
+  max-height: calc(100vh - 4rem);
+  overflow: auto;
   background: rgba(15, 23, 42, 0.82);
   border: 1px solid var(--border);
   border-radius: 1.25rem;
   padding: 1.5rem;
   z-index: 2;
   backdrop-filter: blur(10px);
+}
+
+.hero-dismiss {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid var(--border);
+  background: rgba(2, 6, 23, 0.6);
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.hero-content.hidden {
+  display: none;
 }
 
 .hero-content h1 {
@@ -280,7 +300,7 @@ button.ghost {
   border: 1px solid var(--border);
   padding: 1rem;
   flex: 1;
-  min-height: 55vh;
+  min-height: 60vh;
 }
 
 canvas {
@@ -292,13 +312,15 @@ canvas {
 }
 
 #miniMap {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
   width: 140px;
   height: 140px;
   border: 1px solid rgba(244, 114, 182, 0.4);
   box-shadow: 0 8px 25px rgba(2, 6, 23, 0.6);
+  pointer-events: none;
+  z-index: 12;
 }
 
 .section {

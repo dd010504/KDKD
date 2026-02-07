@@ -24,7 +24,7 @@
           <button type="submit" class="primary">Unlock</button>
           <p class="gate-error" id="gateError" aria-live="polite"></p>
         </form>
-        <p class="gate-hint">Hint: Keyword is LOVE.</p>
+        <p class="gate-hint">Hint: Keyword is LOVE. Decrypt the message to get the passphrase.</p>
       </div>
     </div>
 
@@ -32,6 +32,9 @@
       <section class="hero">
         <div class="hero-content">
           <p class="eyebrow">A little adventure</p>
+          <button class="hero-dismiss" id="dismissHero" aria-label="Hide intro">
+            ✕
+          </button>
           <h1>Kamilya, I made a tiny maze just for you.</h1>
           <p class="subhead">
             Use the arrow keys to guide David through each stage of the story
@@ -76,7 +79,7 @@
           </div>
           <div class="card-footer">
             <span id="gameMessage">Find the key to continue.</span>
-            <button class="small" id="toggleGuide">Guide</button>
+            <button class="small" id="toggleGuide">Instructions</button>
           </div>
         </div>
       </section>
@@ -94,15 +97,13 @@
       </div>
     </div>
 
-    <div class="modal hidden" id="guideModal" aria-hidden="true">
+    <div class="modal hidden" id="stageModal" aria-hidden="true">
       <div class="modal-card">
-        <p class="eyebrow">How to play</p>
-        <h2>Find the key in the maze.</h2>
-        <p class="subhead">
-          Use the arrow keys to move. The minimap shows your progress in the
-          bottom right of the maze.
-        </p>
-        <button class="primary" id="closeGuide">Got it</button>
+        <p class="eyebrow">Stage briefing</p>
+        <h2 id="stageModalTitle">Stage</h2>
+        <p class="subhead" id="stageModalIntro"></p>
+        <ul class="stage-objectives" id="stageModalObjectives"></ul>
+        <button class="primary" id="closeGuide">Start stage</button>
       </div>
     </div>
 
