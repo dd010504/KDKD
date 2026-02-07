@@ -307,6 +307,10 @@ let followerPos = { x: 0, y: 0 };
 let stageLocked = false;
 let gateUnlocked = false;
 let gameInitialized = false;
+let showering = false;
+let showerStart = 0;
+let showerDuration = 1800;
+let showerItem = null;
 
 const getTile = (x, y) => currentMaze[y]?.[x] ?? "#";
 
@@ -332,6 +336,47 @@ const getDavidOutline = () => {
     return "#0b1120";
   }
   return null;
+};
+
+const drawKeyIcon = (context, x, y, size, color) => {
+  const radius = size * 0.18;
+  const shaftLength = size * 0.55;
+  const shaftHeight = size * 0.14;
+  context.fillStyle = color;
+  context.beginPath();
+  context.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
+  context.fill();
+  context.fillRect(
+    x + radius * 2,
+    y + radius - shaftHeight / 2,
+    shaftLength,
+    shaftHeight
+  );
+  context.fillRect(
+    x + radius * 2 + shaftLength * 0.6,
+    y + radius - shaftHeight / 2,
+    shaftHeight,
+    shaftHeight * 1.6
+  );
+};
+
+const drawExitIcon = (context, x, y, size) => {
+  context.fillStyle = "#0b1120";
+  context.fillRect(x, y, size, size);
+  context.strokeStyle = "#38bdf8";
+  context.lineWidth = Math.max(2, size * 0.08);
+  context.strokeRect(x + size * 0.12, y + size * 0.08, size * 0.76, size * 0.84);
+  context.fillStyle = "#38bdf8";
+  context.fillRect(
+    x + size * 0.35,
+    y + size * 0.18,
+    size * 0.3,
+    size * 0.64
+  );
+  context.fillStyle = "#0f172a";
+  context.beginPath();
+  context.arc(x + size * 0.6, y + size * 0.5, size * 0.05, 0, Math.PI * 2);
+  context.fill();
 };
 
 const updateInventoryLabel = () => {
@@ -653,24 +698,21 @@ const draw = () => {
         );
       }
       if (cell === "F") {
-        context.fillStyle = tilePalette.flowers;
-        context.beginPath();
-        context.arc(
-          offsetX + x * tileSize + tileSize / 2,
-          offsetY + y * tileSize + tileSize / 2,
-          tileSize / 4,
-          0,
-          Math.PI * 2
+        drawKeyIcon(
+          context,
+          offsetX + x * tileSize + tileSize * 0.15,
+          offsetY + y * tileSize + tileSize * 0.25,
+          tileSize * 0.7,
+          tilePalette.flowers
         );
-        context.fill();
       }
       if (cell === "B") {
-        context.fillStyle = tilePalette.forgotten;
-        context.fillRect(
-          offsetX + x * tileSize + tileSize * 0.2,
-          offsetY + y * tileSize + tileSize * 0.2,
-          tileSize * 0.6,
-          tileSize * 0.6
+        drawKeyIcon(
+          context,
+          offsetX + x * tileSize + tileSize * 0.15,
+          offsetY + y * tileSize + tileSize * 0.25,
+          tileSize * 0.7,
+          tilePalette.forgotten
         );
       }
       if (cell === "N") {
@@ -686,12 +728,11 @@ const draw = () => {
         context.fill();
       }
       if (cell === "E") {
-        context.fillStyle = tilePalette.exit;
-        context.fillRect(
-          offsetX + x * tileSize + tileSize * 0.15,
-          offsetY + y * tileSize + tileSize * 0.15,
-          tileSize * 0.7,
-          tileSize * 0.7
+        drawExitIcon(
+          context,
+          offsetX + x * tileSize + tileSize * 0.1,
+          offsetY + y * tileSize + tileSize * 0.1,
+          tileSize * 0.8
         );
       }
       if (cell === "K") {
@@ -744,6 +785,21 @@ const draw = () => {
     offsetX + player.x * tileSize + tileSize / 2,
     offsetY + player.y * tileSize + tileSize / 2
   );
+
+  if (showering) {
+    const progress = Math.min(1, (performance.now() - showerStart) / showerDuration);
+    context.strokeStyle = "#38bdf8";
+    context.lineWidth = Math.max(3, tileSize * 0.12);
+    context.beginPath();
+    context.arc(
+      offsetX + player.x * tileSize + tileSize / 2,
+      offsetY + player.y * tileSize + tileSize / 2,
+      tileSize * 0.4,
+      -Math.PI / 2,
+      -Math.PI / 2 + Math.PI * 2 * progress
+    );
+    context.stroke();
+  }
 
   if (followerActive) {
     context.fillStyle = tilePalette.girl;
@@ -870,6 +926,16 @@ const handleTileAction = (cell) => {
         return;
       }
     }
+    if (item.id === "shower" && !showering) {
+      showering = true;
+      showerStart = performance.now();
+      showerItem = item;
+      if (gameMessage) {
+        gameMessage.textContent = "Showering...";
+      }
+      requestAnimationFrame(updateShowerProgress);
+      return;
+    }
     item.collected = true;
     if (item.id === "shower") {
       davidState = "showered";
@@ -952,6 +1018,9 @@ const movePlayer = (dx, dy) => {
   if (!gameActive) {
     return;
   }
+  if (showering) {
+    return;
+  }
   const nextX = player.x + dx;
   const nextY = player.y + dy;
   if (getTile(nextX, nextY) === "#") {
@@ -1012,6 +1081,28 @@ const moveNoButton = () => {
   noButton.style.position = "absolute";
   noButton.style.left = `${randomX}px`;
   noButton.style.top = `${randomY}px`;
+};
+
+const updateShowerProgress = (timestamp) => {
+  if (!showering || !showerItem) {
+    return;
+  }
+  const elapsed = timestamp - showerStart;
+  if (elapsed >= showerDuration) {
+    showering = false;
+    showerItem.collected = true;
+    davidState = "showered";
+    if (gameMessage) {
+      gameMessage.textContent = "Showered! Now get dressed.";
+    }
+    updateInventoryLabel();
+    updateObjectives(stages[currentStageIndex]);
+    setTile(player.x, player.y, ".");
+    draw();
+    return;
+  }
+  draw();
+  requestAnimationFrame(updateShowerProgress);
 };
 
 const launchConfetti = () => {
